@@ -49,7 +49,7 @@ public class TimeSlotRepositoryTest {
     @Before
     public void setup() {
         client = new MongoClient(new ServerAddress(serverAddress));
-        repository = new TimeSlotMongoRepository(client, DB_NAME, COLLECTION_NAME);  // ← UNCOMMENT THIS
+        repository = new TimeSlotMongoRepository(client, DB_NAME, COLLECTION_NAME);  
         MongoDatabase database = client.getDatabase(DB_NAME);
         database.drop();
         timeSlotCollection = database.getCollection(COLLECTION_NAME);
@@ -63,5 +63,31 @@ public class TimeSlotRepositoryTest {
     @Test
     public void testFindAllWhenDatabaseIsEmpty() {
         assertThat(repository.findAll()).isEmpty();
+    }
+    
+    @Test
+    public void testFindAllWhenDatabaseHasRecords() {
+        timeSlotCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "1")
+                .append("doctorName", "Dr. House")
+                .append("department", "Cardiology")
+                .append("roomNumber", "101")
+                .append("appointmentDateTime", LocalDateTime.now().plusDays(1).toString())
+        );
+        
+        timeSlotCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "2")
+                .append("doctorName", "Dr. Smith")
+                .append("department", "Neurology")
+                .append("roomNumber", "202")
+                .append("appointmentDateTime", LocalDateTime.now().plusDays(2).toString())
+        );
+        
+        List<TimeSlot> timeSlots = repository.findAll();
+        assertThat(timeSlots).hasSize(2);
+        assertThat(timeSlots.get(0).getId()).isEqualTo("1");
+        assertThat(timeSlots.get(1).getId()).isEqualTo("2");
     }
 }

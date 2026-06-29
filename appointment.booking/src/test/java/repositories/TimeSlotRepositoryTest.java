@@ -13,6 +13,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import models.TimeSlot;
+import mongo.TimeSlotMongoRepository;
+
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
@@ -47,6 +49,7 @@ public class TimeSlotRepositoryTest {
     @Before
     public void setup() {
         client = new MongoClient(new ServerAddress(serverAddress));
+        repository = new TimeSlotMongoRepository(client, DB_NAME, COLLECTION_NAME);  // ← UNCOMMENT THIS
         MongoDatabase database = client.getDatabase(DB_NAME);
         database.drop();
         timeSlotCollection = database.getCollection(COLLECTION_NAME);

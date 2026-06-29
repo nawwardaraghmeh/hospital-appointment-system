@@ -13,7 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import models.TimeSlot;
-import mongo.TimeSlotMongoRepository;
+import repositories.mongo.TimeSlotMongoRepository;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;

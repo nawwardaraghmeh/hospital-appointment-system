@@ -1,4 +1,4 @@
-package mongo;
+package repositories.mongo;
 
 import models.TimeSlot;
 import repositories.TimeSlotRepository;

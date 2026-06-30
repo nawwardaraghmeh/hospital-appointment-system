@@ -5,4 +5,5 @@ import models.Appointment;
 
 public interface AppointmentRepository {
     List<Appointment> findAll();
+    Appointment findById(String id); 
 }

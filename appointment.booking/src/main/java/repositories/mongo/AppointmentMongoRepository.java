@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 
 import models.Appointment;
 import models.TimeSlot;
@@ -27,6 +28,15 @@ public class AppointmentMongoRepository implements AppointmentRepository  {
         return StreamSupport.stream(appointmentCollection.find().spliterator(), false)
                 .map(this::fromDocumentToAppointment)
                 .collect(Collectors.toList());
+    }
+    
+    @Override
+    public Appointment findById(String id) {
+        Document doc = appointmentCollection.find(Filters.eq("id", id)).first();
+        if (doc != null) {
+            return fromDocumentToAppointment(doc);
+        }
+        return null;
     }
 
     private Appointment fromDocumentToAppointment(Document doc) {

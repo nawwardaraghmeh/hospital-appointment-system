@@ -1,0 +1,65 @@
+package controllers;
+
+import models.Appointment;
+import models.TimeSlot;
+import repositories.AppointmentRepository;
+import repositories.TimeSlotRepository;
+
+import java.util.Collections;
+import java.util.List;
+
+public class HospitalController {
+
+    private final TimeSlotRepository timeSlotRepository;
+    private final AppointmentRepository appointmentRepository;
+
+    public HospitalController(TimeSlotRepository timeSlotRepository, 
+                              AppointmentRepository appointmentRepository) {
+        this.timeSlotRepository = timeSlotRepository;
+        this.appointmentRepository = appointmentRepository;
+    }
+    
+    public List<TimeSlot> getAllTimeSlots() {
+        return timeSlotRepository.findAll();
+    }
+    
+    public TimeSlot getTimeSlotById(String id) {
+        return timeSlotRepository.findById(id);
+    }
+    
+    public List<TimeSlot> getAvailableTimeSlots() {
+        List<TimeSlot> allSlots = timeSlotRepository.findAll();
+        return allSlots.stream()
+                .filter(slot -> slot.getAppointment() == null)
+                .collect(java.util.stream.Collectors.toList());
+    }
+    
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
+    
+    public Appointment createAppointment(Appointment appointment) {
+        TimeSlot timeSlot = timeSlotRepository.findById(appointment.getTimeSlot().getId());
+        
+        if (timeSlot == null) {
+            throw new IllegalArgumentException("Time slot not found: " + appointment.getTimeSlot().getId());
+        }
+        
+        if (timeSlot.getAppointment() != null) {
+            throw new IllegalStateException("Time slot is already booked");
+        }
+        
+        appointmentRepository.save(appointment);
+        return appointment;
+    }
+    
+    public void deleteAppointment(String appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        
+        if (appointment == null) {
+            throw new IllegalArgumentException("Appointment not found: " + appointmentId);
+        }
+        
+        appointmentRepository.delete(appointmentId);
+    }
+}

@@ -45,6 +45,10 @@ public class HospitalController {
             throw new IllegalArgumentException("Time slot not found: " + appointment.getTimeSlot().getId());
         }
         
+        if (timeSlot.getAppointment() != null) {
+            throw new IllegalStateException("Time slot is already booked");
+        }
+        
         appointmentRepository.save(appointment);
         return appointment;
     }

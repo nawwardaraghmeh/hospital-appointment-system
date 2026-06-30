@@ -2,10 +2,10 @@ package controllers;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -100,5 +100,17 @@ public class HospitalControllerTest {
 
         assertThat(result).isEqualTo(expectedAppointments);
         verify(appointmentRepository, times(1)).findAll();
+    }
+    
+    @Test
+    public void testCreateAppointmentSuccess() {
+        when(timeSlotRepository.findById("TS001")).thenReturn(testTimeSlot);
+        doNothing().when(appointmentRepository).save(testAppointment);
+
+        Appointment result = controller.createAppointment(testAppointment);
+
+        assertThat(result).isEqualTo(testAppointment);
+        verify(timeSlotRepository, times(1)).findById("TS001");
+        verify(appointmentRepository, times(1)).save(testAppointment);
     }
 }

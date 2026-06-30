@@ -37,4 +37,10 @@ public class HospitalController {
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }
+    
+    public Appointment createAppointment(Appointment appointment) {
+    	    timeSlotRepository.findById(appointment.getTimeSlot().getId());  
+    	    appointmentRepository.save(appointment);
+    	    return appointment;
+    }
 }

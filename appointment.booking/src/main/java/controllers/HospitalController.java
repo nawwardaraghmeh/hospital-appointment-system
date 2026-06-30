@@ -52,4 +52,9 @@ public class HospitalController {
         appointmentRepository.save(appointment);
         return appointment;
     }
+    
+    public void deleteAppointment(String appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId);
+        appointmentRepository.delete(appointmentId);
+    }
 }

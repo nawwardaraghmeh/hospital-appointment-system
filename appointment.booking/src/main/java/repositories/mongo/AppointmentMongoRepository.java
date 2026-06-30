@@ -1,14 +1,16 @@
 package repositories.mongo;
 
-import models.Appointment;
-import repositories.AppointmentRepository;
-
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
 
-import org.bson.Document;
+import models.Appointment;
+import models.TimeSlot;
+import repositories.AppointmentRepository;
 
 
 public class AppointmentMongoRepository implements AppointmentRepository  {
@@ -22,6 +24,21 @@ public class AppointmentMongoRepository implements AppointmentRepository  {
     
     @Override
     public List<Appointment> findAll() {
-        return Collections.emptyList();
+        return StreamSupport.stream(appointmentCollection.find().spliterator(), false)
+                .map(this::fromDocumentToAppointment)
+                .collect(Collectors.toList());
     }
+
+    private Appointment fromDocumentToAppointment(Document doc) {
+        String timeSlotId = doc.getString("timeSlotId");
+        TimeSlot timeSlot = new TimeSlot();
+        timeSlot.setId(timeSlotId);
+        
+        return new Appointment(
+                doc.getString("id"),
+                doc.getString("patientName"),
+                timeSlot
+        );
+    }
+
 }

@@ -10,6 +10,7 @@ import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 
 public class TimeSlotMongoRepository implements TimeSlotRepository {
 
@@ -26,6 +27,15 @@ public class TimeSlotMongoRepository implements TimeSlotRepository {
         return StreamSupport.stream(timeSlotCollection.find().spliterator(), false)
                 .map(this::fromDocumentToTimeSlot)
                 .collect(Collectors.toList());
+    }
+    
+    @Override
+    public TimeSlot findById(String id) { 
+        Document doc = timeSlotCollection.find(Filters.eq("id", id)).first();
+        if (doc != null) {
+            return fromDocumentToTimeSlot(doc);
+        }
+        return null;
     }
 
     private TimeSlot fromDocumentToTimeSlot(Document doc) {

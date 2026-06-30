@@ -33,4 +33,8 @@ public class HospitalController {
                 .filter(slot -> slot.getAppointment() == null)
                 .collect(java.util.stream.Collectors.toList());
     }
+    
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
 }

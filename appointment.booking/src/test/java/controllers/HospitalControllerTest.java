@@ -1,8 +1,18 @@
 package controllers;
 
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -43,5 +53,16 @@ public class HospitalControllerTest {
             "John Doe",
             testTimeSlot
         );
+    }
+    
+    @Test
+    public void testGetAllTimeSlots() {
+        List<TimeSlot> expectedSlots = Arrays.asList(testTimeSlot);
+        when(timeSlotRepository.findAll()).thenReturn(expectedSlots);
+
+        List<TimeSlot> result = controller.getAllTimeSlots();
+
+        assertThat(result).isEqualTo(expectedSlots);
+        verify(timeSlotRepository, times(1)).findAll();
     }
 }

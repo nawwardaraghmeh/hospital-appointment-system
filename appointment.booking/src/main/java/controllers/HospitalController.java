@@ -39,8 +39,13 @@ public class HospitalController {
     }
     
     public Appointment createAppointment(Appointment appointment) {
-    	    timeSlotRepository.findById(appointment.getTimeSlot().getId());  
-    	    appointmentRepository.save(appointment);
-    	    return appointment;
+        TimeSlot timeSlot = timeSlotRepository.findById(appointment.getTimeSlot().getId());
+        
+        if (timeSlot == null) {
+            throw new IllegalArgumentException("Time slot not found: " + appointment.getTimeSlot().getId());
+        }
+        
+        appointmentRepository.save(appointment);
+        return appointment;
     }
 }

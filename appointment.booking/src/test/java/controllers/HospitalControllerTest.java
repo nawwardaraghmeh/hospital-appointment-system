@@ -123,4 +123,16 @@ public class HospitalControllerTest {
 
         verify(appointmentRepository, never()).save(testAppointment);
     }
+    
+    @Test(expected = IllegalStateException.class)
+    public void testCreateAppointmentWhenTimeSlotAlreadyBooked() {
+        TimeSlot bookedSlot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        bookedSlot.setAppointment(new Appointment("APT002", "Jane Smith", bookedSlot));
+        
+        when(timeSlotRepository.findById("TS001")).thenReturn(bookedSlot);
+
+        controller.createAppointment(testAppointment);
+
+        verify(appointmentRepository, never()).save(testAppointment);
+    }
 }

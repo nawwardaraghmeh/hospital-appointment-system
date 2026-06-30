@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 
 import models.Appointment;
 import models.TimeSlot;
@@ -41,14 +42,26 @@ public class AppointmentMongoRepository implements AppointmentRepository  {
     
     @Override
     public void save(Appointment appointment) {
-        appointmentCollection.insertOne(
-            new Document()
-                .append("id", appointment.getId())
-                .append("patientName", appointment.getPatientName())
-                .append("timeSlotId", appointment.getTimeSlot().getId())
-        );
+        Document existing = appointmentCollection.find(Filters.eq("id", appointment.getId())).first();
+        
+        if (existing != null) {
+            appointmentCollection.updateOne(
+                Filters.eq("id", appointment.getId()),
+                Updates.combine(
+                    Updates.set("patientName", appointment.getPatientName()),
+                    Updates.set("timeSlotId", appointment.getTimeSlot().getId())
+                )
+            );
+        } else {
+            appointmentCollection.insertOne(
+                new Document()
+                    .append("id", appointment.getId())
+                    .append("patientName", appointment.getPatientName())
+                    .append("timeSlotId", appointment.getTimeSlot().getId())
+            );
+        }
     }
-
+    
     private Appointment fromDocumentToAppointment(Document doc) {
         String timeSlotId = doc.getString("timeSlotId");
         TimeSlot timeSlot = new TimeSlot();

@@ -90,4 +90,31 @@ public class TimeSlotRepositoryTest {
         assertThat(timeSlots.get(0).getId()).isEqualTo("1");
         assertThat(timeSlots.get(1).getId()).isEqualTo("2");
     }
+    
+    @Test
+    public void testFindByIdWhenNotFound() {
+        TimeSlot timeSlot = repository.findById("999");
+        assertThat(timeSlot).isNull();
+    }
+    
+    @Test
+    public void testFindByIdWhenFound() {
+        
+        timeSlotCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "1")
+                .append("doctorName", "Dr. House")
+                .append("department", "Cardiology")
+                .append("roomNumber", "101")
+                .append("appointmentDateTime", LocalDateTime.now().plusDays(1).toString())
+        );
+        
+        TimeSlot timeSlot = repository.findById("1");
+        assertThat(timeSlot).isNotNull();
+        assertThat(timeSlot.getId()).isEqualTo("1");
+        assertThat(timeSlot.getDoctorName()).isEqualTo("Dr. House");
+        assertThat(timeSlot.getDepartment()).isEqualTo("Cardiology");
+        assertThat(timeSlot.getRoomNumber()).isEqualTo("101");
+        
+    }
 }

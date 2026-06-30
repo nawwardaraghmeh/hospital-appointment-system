@@ -7,4 +7,5 @@ public interface AppointmentRepository {
     List<Appointment> findAll();
     Appointment findById(String id); 
     void save (Appointment appointment);
+    void delete(String id);
 }

@@ -40,5 +40,4 @@ public class AppointmentMongoRepository implements AppointmentRepository  {
                 timeSlot
         );
     }
-
 }

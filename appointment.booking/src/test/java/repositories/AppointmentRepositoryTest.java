@@ -85,4 +85,26 @@ public class AppointmentRepositoryTest {
         assertThat(appointments.get(0).getPatientName()).isEqualTo("John Doe");
         assertThat(appointments.get(1).getPatientName()).isEqualTo("Jane Smith");
     }
+    
+    @Test
+    public void testFindByIdWhenNotFound() {
+        Appointment appointment = repository.findById("999");
+        assertThat(appointment).isNull();
+    }
+
+    @Test
+    public void testFindByIdWhenFound() {
+        appointmentCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "1")
+                .append("patientName", "John Doe")
+                .append("timeSlotId", "TS001")
+        );
+        
+        Appointment appointment = repository.findById("1");
+        assertThat(appointment).isNotNull();
+        assertThat(appointment.getId()).isEqualTo("1");
+        assertThat(appointment.getPatientName()).isEqualTo("John Doe");
+        assertThat(appointment.getTimeSlot().getId()).isEqualTo("TS001");
+    }
 }

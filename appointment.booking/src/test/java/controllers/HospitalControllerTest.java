@@ -65,4 +65,14 @@ public class HospitalControllerTest {
         assertThat(result).isEqualTo(expectedSlots);
         verify(timeSlotRepository, times(1)).findAll();
     }
+    
+    @Test
+    public void testGetTimeSlotById() {
+        when(timeSlotRepository.findById("TS001")).thenReturn(testTimeSlot);
+
+        TimeSlot result = controller.getTimeSlotById("TS001");
+
+        assertThat(result).isEqualTo(testTimeSlot);
+        verify(timeSlotRepository, times(1)).findById("TS001");
+    }
 }

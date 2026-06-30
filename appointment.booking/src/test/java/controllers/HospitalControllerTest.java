@@ -23,6 +23,7 @@ import models.Appointment;
 import models.TimeSlot;
 import repositories.AppointmentRepository;
 import repositories.TimeSlotRepository;
+import views.HospitalView;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HospitalControllerTest {
@@ -32,6 +33,9 @@ public class HospitalControllerTest {
 
     @Mock
     private AppointmentRepository appointmentRepository;
+    
+    @Mock
+    private HospitalView view;
 
     @InjectMocks
     private HospitalController controller;
@@ -61,10 +65,10 @@ public class HospitalControllerTest {
         List<TimeSlot> expectedSlots = Arrays.asList(testTimeSlot);
         when(timeSlotRepository.findAll()).thenReturn(expectedSlots);
 
-        List<TimeSlot> result = controller.getAllTimeSlots();
+        controller.getAllTimeSlots();
 
-        assertThat(result).isEqualTo(expectedSlots);
         verify(timeSlotRepository, times(1)).findAll();
+        verify(view, times(1)).showAllTimeSlots(expectedSlots);
     }
     
     @Test
@@ -85,11 +89,10 @@ public class HospitalControllerTest {
         List<TimeSlot> allSlots = Arrays.asList(testTimeSlot, bookedSlot);
         when(timeSlotRepository.findAll()).thenReturn(allSlots);
 
-        List<TimeSlot> availableSlots = controller.getAvailableTimeSlots();
+        controller.getAvailableTimeSlots();
 
-        assertThat(availableSlots).hasSize(1);
-        assertThat(availableSlots.get(0)).isEqualTo(testTimeSlot);
         verify(timeSlotRepository, times(1)).findAll();
+        verify(view, times(1)).showAvailableTimeSlots(Arrays.asList(testTimeSlot));
     }
     
     @Test
@@ -97,10 +100,10 @@ public class HospitalControllerTest {
         List<Appointment> expectedAppointments = Arrays.asList(testAppointment);
         when(appointmentRepository.findAll()).thenReturn(expectedAppointments);
 
-        List<Appointment> result = controller.getAllAppointments();
+        controller.getAllAppointments();
 
-        assertThat(result).isEqualTo(expectedAppointments);
         verify(appointmentRepository, times(1)).findAll();
+        verify(view, times(1)).showAllAppointments(expectedAppointments);
     }
     
     @Test
@@ -108,23 +111,24 @@ public class HospitalControllerTest {
         when(timeSlotRepository.findById("TS001")).thenReturn(testTimeSlot);
         doNothing().when(appointmentRepository).save(testAppointment);
 
-        Appointment result = controller.createAppointment(testAppointment);
+        controller.createAppointment(testAppointment);
 
-        assertThat(result).isEqualTo(testAppointment);
         verify(timeSlotRepository, times(1)).findById("TS001");
         verify(appointmentRepository, times(1)).save(testAppointment);
+        verify(view, times(1)).appointmentCreated(testAppointment);
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateAppointmentWhenTimeSlotNotFound() {
         when(timeSlotRepository.findById("TS001")).thenReturn(null);
 
         controller.createAppointment(testAppointment);
 
         verify(appointmentRepository, never()).save(testAppointment);
+        verify(view, times(1)).showError("Time slot not found: TS001");
     }
     
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testCreateAppointmentWhenTimeSlotAlreadyBooked() {
         TimeSlot bookedSlot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         bookedSlot.setAppointment(new Appointment("APT002", "Jane Smith", bookedSlot));
@@ -134,6 +138,7 @@ public class HospitalControllerTest {
         controller.createAppointment(testAppointment);
 
         verify(appointmentRepository, never()).save(testAppointment);
+        verify(view, times(1)).showError("Time slot is already booked");
     }
     
     @Test
@@ -143,14 +148,16 @@ public class HospitalControllerTest {
         controller.deleteAppointment("APT001");
 
         verify(appointmentRepository, times(1)).delete("APT001");
+        verify(view, times(1)).appointmentDeleted("APT001");
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDeleteAppointmentWhenNotFound() {
         when(appointmentRepository.findById("APT001")).thenReturn(null);
 
         controller.deleteAppointment("APT001");
 
         verify(appointmentRepository, never()).delete("APT001");
+        verify(view, times(1)).showError("Appointment not found: APT001");
     }
 }

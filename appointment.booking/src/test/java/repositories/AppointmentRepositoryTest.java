@@ -63,4 +63,26 @@ public class AppointmentRepositoryTest {
         List<Appointment> appointments = repository.findAll();
         assertThat(appointments).isEmpty();
     }
+    
+    @Test
+    public void testFindAllWhenDatabaseHasRecords() {
+        appointmentCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "1")
+                .append("patientName", "John Doe")
+                .append("timeSlotId", "TS001")
+        );
+        
+        appointmentCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "2")
+                .append("patientName", "Jane Smith")
+                .append("timeSlotId", "TS002")
+        );
+        
+        List<Appointment> appointments = repository.findAll();
+        assertThat(appointments).hasSize(2);
+        assertThat(appointments.get(0).getPatientName()).isEqualTo("John Doe");
+        assertThat(appointments.get(1).getPatientName()).isEqualTo("Jane Smith");
+    }
 }

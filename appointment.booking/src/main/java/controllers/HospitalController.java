@@ -55,6 +55,11 @@ public class HospitalController {
     
     public void deleteAppointment(String appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId);
+        
+        if (appointment == null) {
+            throw new IllegalArgumentException("Appointment not found: " + appointmentId);
+        }
+        
         appointmentRepository.delete(appointmentId);
     }
 }

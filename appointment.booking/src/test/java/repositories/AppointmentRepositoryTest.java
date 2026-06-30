@@ -122,4 +122,24 @@ public class AppointmentRepositoryTest {
         assertThat(saved.getPatientName()).isEqualTo("John Doe");
         assertThat(saved.getTimeSlot().getId()).isEqualTo("TS001");
     }
+    
+    @Test
+    public void testSaveExistingAppointment() {
+        TimeSlot timeSlot = new TimeSlot("TS001", "Dr. House", "Cardiology", "101", null);
+        Appointment original = new Appointment("1", "John Doe", timeSlot);
+        repository.save(original);
+        
+        Appointment saved = repository.findById("1");
+        assertThat(saved).isNotNull();
+        assertThat(saved.getPatientName()).isEqualTo("John Doe");
+        
+        TimeSlot updatedTimeSlot = new TimeSlot("TS002", "Dr. Smith", "Neurology", "202", null);
+        Appointment updated = new Appointment("1", "Jane Smith", updatedTimeSlot);
+        repository.save(updated);
+        
+        Appointment result = repository.findById("1");
+        assertThat(result).isNotNull();
+        assertThat(result.getPatientName()).isEqualTo("Jane Smith");
+        assertThat(result.getTimeSlot().getId()).isEqualTo("TS002");
+    }
 }

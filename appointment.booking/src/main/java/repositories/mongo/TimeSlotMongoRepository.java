@@ -11,6 +11,7 @@ import java.util.stream.StreamSupport;
 import org.bson.Document;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 
 public class TimeSlotMongoRepository implements TimeSlotRepository {
 
@@ -36,6 +37,32 @@ public class TimeSlotMongoRepository implements TimeSlotRepository {
             return fromDocumentToTimeSlot(doc);
         }
         return null;
+    }
+    
+    @Override
+    public void save(TimeSlot timeSlot) { 
+        Document existing = timeSlotCollection.find(Filters.eq("id", timeSlot.getId())).first();
+        
+        if (existing != null) {
+            timeSlotCollection.updateOne(
+                Filters.eq("id", timeSlot.getId()),
+                Updates.combine(
+                    Updates.set("doctorName", timeSlot.getDoctorName()),
+                    Updates.set("department", timeSlot.getDepartment()),
+                    Updates.set("roomNumber", timeSlot.getRoomNumber()),
+                    Updates.set("appointmentDateTime", timeSlot.getAppointmentDateTime().toString())
+                )
+            );
+        } else {
+            timeSlotCollection.insertOne(
+                new Document()
+                    .append("id", timeSlot.getId())
+                    .append("doctorName", timeSlot.getDoctorName())
+                    .append("department", timeSlot.getDepartment())
+                    .append("roomNumber", timeSlot.getRoomNumber())
+                    .append("appointmentDateTime", timeSlot.getAppointmentDateTime().toString())
+            );
+        }
     }
 
     private TimeSlot fromDocumentToTimeSlot(Document doc) {

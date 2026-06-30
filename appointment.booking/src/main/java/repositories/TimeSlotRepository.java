@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TimeSlotRepository {
     List<TimeSlot> findAll();
+    TimeSlot findById(String id); 
 }

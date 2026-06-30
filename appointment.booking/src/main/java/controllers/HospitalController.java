@@ -26,4 +26,11 @@ public class HospitalController {
     public TimeSlot getTimeSlotById(String id) {
         return timeSlotRepository.findById(id);
     }
+    
+    public List<TimeSlot> getAvailableTimeSlots() {
+        List<TimeSlot> allSlots = timeSlotRepository.findAll();
+        return allSlots.stream()
+                .filter(slot -> slot.getAppointment() == null)
+                .collect(java.util.stream.Collectors.toList());
+    }
 }

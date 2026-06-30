@@ -142,4 +142,20 @@ public class AppointmentRepositoryTest {
         assertThat(result.getPatientName()).isEqualTo("Jane Smith");
         assertThat(result.getTimeSlot().getId()).isEqualTo("TS002");
     }
+    
+    @Test
+    public void testDeleteAppointment() {
+        appointmentCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "1")
+                .append("patientName", "John Doe")
+                .append("timeSlotId", "TS001")
+        );
+        
+        assertThat(repository.findById("1")).isNotNull();
+        
+        repository.delete("1");
+        
+        assertThat(repository.findById("1")).isNull();
+    }
 }

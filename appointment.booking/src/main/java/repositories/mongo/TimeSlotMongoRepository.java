@@ -64,6 +64,11 @@ public class TimeSlotMongoRepository implements TimeSlotRepository {
             );
         }
     }
+    
+    @Override
+    public void delete(String id) {
+        timeSlotCollection.deleteOne(Filters.eq("id", id));
+    }
 
     private TimeSlot fromDocumentToTimeSlot(Document doc) {
         return new TimeSlot(

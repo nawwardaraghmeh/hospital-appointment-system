@@ -22,4 +22,8 @@ public class HospitalController {
     public List<TimeSlot> getAllTimeSlots() {
         return timeSlotRepository.findAll();
     }
+    
+    public TimeSlot getTimeSlotById(String id) {
+        return timeSlotRepository.findById(id);
+    }
 }

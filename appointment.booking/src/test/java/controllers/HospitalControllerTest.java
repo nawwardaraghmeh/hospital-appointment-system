@@ -90,4 +90,15 @@ public class HospitalControllerTest {
         assertThat(availableSlots.get(0)).isEqualTo(testTimeSlot);
         verify(timeSlotRepository, times(1)).findAll();
     }
+    
+    @Test
+    public void testGetAllAppointments() {
+        List<Appointment> expectedAppointments = Arrays.asList(testAppointment);
+        when(appointmentRepository.findAll()).thenReturn(expectedAppointments);
+
+        List<Appointment> result = controller.getAllAppointments();
+
+        assertThat(result).isEqualTo(expectedAppointments);
+        verify(appointmentRepository, times(1)).findAll();
+    }
 }

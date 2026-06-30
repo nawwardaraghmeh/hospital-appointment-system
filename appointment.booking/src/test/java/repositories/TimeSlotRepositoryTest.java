@@ -117,4 +117,24 @@ public class TimeSlotRepositoryTest {
         assertThat(timeSlot.getRoomNumber()).isEqualTo("101");
         
     }
+    
+    @Test
+    public void testSaveNewTimeSlot() {        
+        TimeSlot timeSlot = new TimeSlot(
+            "3", 
+            "Dr. Wilson", 
+            "Oncology", 
+            "303", 
+            LocalDateTime.now().plusDays(3)
+        );
+        
+        repository.save(timeSlot);
+        
+        TimeSlot saved = repository.findById("3");
+        assertThat(saved).isNotNull();
+        assertThat(saved.getId()).isEqualTo("3");
+        assertThat(saved.getDoctorName()).isEqualTo("Dr. Wilson");
+        assertThat(saved.getDepartment()).isEqualTo("Oncology");
+        assertThat(saved.getRoomNumber()).isEqualTo("303");
+    }
 }

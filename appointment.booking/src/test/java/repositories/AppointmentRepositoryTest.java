@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import models.Appointment;
+import models.TimeSlot;
 import repositories.mongo.AppointmentMongoRepository;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -106,5 +107,19 @@ public class AppointmentRepositoryTest {
         assertThat(appointment.getId()).isEqualTo("1");
         assertThat(appointment.getPatientName()).isEqualTo("John Doe");
         assertThat(appointment.getTimeSlot().getId()).isEqualTo("TS001");
+    }
+    
+    @Test
+    public void testSaveNewAppointment() {
+        TimeSlot timeSlot = new TimeSlot("TS001", "Dr. House", "Cardiology", "101", null);
+        Appointment appointment = new Appointment("1", "John Doe", timeSlot);
+        
+        repository.save(appointment);
+        
+        Appointment saved = repository.findById("1");
+        assertThat(saved).isNotNull();
+        assertThat(saved.getId()).isEqualTo("1");
+        assertThat(saved.getPatientName()).isEqualTo("John Doe");
+        assertThat(saved.getTimeSlot().getId()).isEqualTo("TS001");
     }
 }

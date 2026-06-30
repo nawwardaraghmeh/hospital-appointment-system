@@ -75,4 +75,19 @@ public class HospitalControllerTest {
         assertThat(result).isEqualTo(testTimeSlot);
         verify(timeSlotRepository, times(1)).findById("TS001");
     }
+    
+    @Test
+    public void testGetAvailableTimeSlots() {
+        TimeSlot bookedSlot = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
+        bookedSlot.setAppointment(new Appointment("APT002", "Jane Smith", bookedSlot));
+        
+        List<TimeSlot> allSlots = Arrays.asList(testTimeSlot, bookedSlot);
+        when(timeSlotRepository.findAll()).thenReturn(allSlots);
+
+        List<TimeSlot> availableSlots = controller.getAvailableTimeSlots();
+
+        assertThat(availableSlots).hasSize(1);
+        assertThat(availableSlots.get(0)).isEqualTo(testTimeSlot);
+        verify(timeSlotRepository, times(1)).findAll();
+    }
 }

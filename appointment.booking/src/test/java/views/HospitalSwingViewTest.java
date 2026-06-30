@@ -1,0 +1,61 @@
+package views;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.JFrame;
+
+import org.assertj.swing.edt.GuiActionRunner;
+import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.junit.runner.GUITestRunner;
+import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import controllers.HospitalController;
+import models.Appointment;
+import models.TimeSlot;
+import repositories.AppointmentRepository;
+import repositories.TimeSlotRepository;
+
+@RunWith(GUITestRunner.class)
+public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
+
+    @Mock
+    private TimeSlotRepository timeSlotRepository;
+
+    @Mock
+    private AppointmentRepository appointmentRepository;
+
+    @InjectMocks
+    private HospitalController controller;
+
+    private FrameFixture window;
+    private HospitalSwingView view;
+
+    @Override
+    protected void onSetUp() {
+        view = GuiActionRunner.execute(() -> new HospitalSwingView());
+        
+        controller = new HospitalController(timeSlotRepository, appointmentRepository, view);
+        
+        view.setHospitalController(controller);
+        
+        window = new FrameFixture(robot(), view);
+        window.show();
+    }
+
+    @Override
+    protected void onTearDown() {
+        window.cleanUp();
+    }
+
+}

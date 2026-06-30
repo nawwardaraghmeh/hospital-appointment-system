@@ -3,6 +3,7 @@ package controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -112,5 +113,14 @@ public class HospitalControllerTest {
         assertThat(result).isEqualTo(testAppointment);
         verify(timeSlotRepository, times(1)).findById("TS001");
         verify(appointmentRepository, times(1)).save(testAppointment);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateAppointmentWhenTimeSlotNotFound() {
+        when(timeSlotRepository.findById("TS001")).thenReturn(null);
+
+        controller.createAppointment(testAppointment);
+
+        verify(appointmentRepository, never()).save(testAppointment);
     }
 }

@@ -135,4 +135,13 @@ public class HospitalControllerTest {
 
         verify(appointmentRepository, never()).save(testAppointment);
     }
+    
+    @Test
+    public void testDeleteAppointmentSuccess() {
+        when(appointmentRepository.findById("APT001")).thenReturn(testAppointment);
+
+        controller.deleteAppointment("APT001");
+
+        verify(appointmentRepository, times(1)).delete("APT001");
+    }
 }

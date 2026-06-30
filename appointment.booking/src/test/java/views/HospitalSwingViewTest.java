@@ -57,5 +57,10 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     protected void onTearDown() {
         window.cleanUp();
     }
+    
+    @Test
+    public void testWindowInitialState() {
+        assertThat(window.target().getTitle()).isEqualTo("Hospital Appointment System");
 
+    }
 }

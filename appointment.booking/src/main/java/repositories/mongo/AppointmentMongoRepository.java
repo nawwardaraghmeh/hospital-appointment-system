@@ -38,6 +38,16 @@ public class AppointmentMongoRepository implements AppointmentRepository  {
         }
         return null;
     }
+    
+    @Override
+    public void save(Appointment appointment) {
+        appointmentCollection.insertOne(
+            new Document()
+                .append("id", appointment.getId())
+                .append("patientName", appointment.getPatientName())
+                .append("timeSlotId", appointment.getTimeSlot().getId())
+        );
+    }
 
     private Appointment fromDocumentToAppointment(Document doc) {
         String timeSlotId = doc.getString("timeSlotId");

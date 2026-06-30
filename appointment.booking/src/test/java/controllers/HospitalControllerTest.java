@@ -144,4 +144,13 @@ public class HospitalControllerTest {
 
         verify(appointmentRepository, times(1)).delete("APT001");
     }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteAppointmentWhenNotFound() {
+        when(appointmentRepository.findById("APT001")).thenReturn(null);
+
+        controller.deleteAppointment("APT001");
+
+        verify(appointmentRepository, never()).delete("APT001");
+    }
 }

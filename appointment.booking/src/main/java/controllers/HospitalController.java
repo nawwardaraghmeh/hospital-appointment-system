@@ -18,4 +18,8 @@ public class HospitalController {
         this.timeSlotRepository = timeSlotRepository;
         this.appointmentRepository = appointmentRepository;
     }
+    
+    public List<TimeSlot> getAllTimeSlots() {
+        return timeSlotRepository.findAll();
+    }
 }

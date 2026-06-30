@@ -8,4 +8,5 @@ public interface TimeSlotRepository {
     List<TimeSlot> findAll();
     TimeSlot findById(String id); 
     void save(TimeSlot timeSlot);
+    void delete(String id);
 }

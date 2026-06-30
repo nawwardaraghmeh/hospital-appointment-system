@@ -1,0 +1,12 @@
+package repositories;
+
+import models.TimeSlot;
+
+import java.util.List;
+
+public interface TimeSlotRepository {
+    List<TimeSlot> findAll();
+    TimeSlot findById(String id); 
+    void save(TimeSlot timeSlot);
+    void delete(String id);
+}

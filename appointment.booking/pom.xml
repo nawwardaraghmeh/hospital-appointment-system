@@ -18,16 +18,30 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.7.0</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+    
     <dependency>
       <groupId>org.assertj</groupId>
 	  <artifactId>assertj-swing-junit</artifactId>
 	  <version>3.17.1</version>
 	  <scope>test</scope>
 	</dependency>
+	
+	<dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongo-java-driver</artifactId>
+      <version>3.12.7</version>
+      
+    </dependency>
+    <dependency>
+      <groupId>de.bwaldvogel</groupId>
+      <artifactId>mongo-java-server</artifactId>
+      <version>1.11.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

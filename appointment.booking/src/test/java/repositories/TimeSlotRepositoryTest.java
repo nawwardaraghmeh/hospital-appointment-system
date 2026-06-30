@@ -137,4 +137,22 @@ public class TimeSlotRepositoryTest {
         assertThat(saved.getDepartment()).isEqualTo("Oncology");
         assertThat(saved.getRoomNumber()).isEqualTo("303");
     }
+    
+    @Test
+    public void testDeleteTimeSlot() {        
+        timeSlotCollection.insertOne(
+            new org.bson.Document()
+                .append("id", "1")
+                .append("doctorName", "Dr. House")
+                .append("department", "Cardiology")
+                .append("roomNumber", "101")
+                .append("appointmentDateTime", LocalDateTime.now().plusDays(1).toString())
+        );
+        
+        assertThat(repository.findById("1")).isNotNull();
+        
+        repository.delete("1");
+        
+        assertThat(repository.findById("1")).isNull();
+    }
 }

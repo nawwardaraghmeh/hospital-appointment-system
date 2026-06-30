@@ -139,6 +139,38 @@ public class TimeSlotRepositoryTest {
     }
     
     @Test
+    public void testSaveExistingTimeSlot() {        
+        TimeSlot original = new TimeSlot(
+            "1", 
+            "Dr. House", 
+            "Cardiology", 
+            "101", 
+            LocalDateTime.now().plusDays(1)
+        );
+        repository.save(original);
+        
+        TimeSlot saved = repository.findById("1");
+        assertThat(saved).isNotNull();
+        assertThat(saved.getDoctorName()).isEqualTo("Dr. House");
+        
+        TimeSlot updated = new TimeSlot(
+            "1", 
+            "Dr. Wilson",  
+            "Oncology",    
+            "303",         
+            LocalDateTime.now().plusDays(5) 
+        );
+        repository.save(updated);
+        
+        TimeSlot result = repository.findById("1");
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo("1");
+        assertThat(result.getDoctorName()).isEqualTo("Dr. Wilson");  
+        assertThat(result.getDepartment()).isEqualTo("Oncology");    
+        assertThat(result.getRoomNumber()).isEqualTo("303");                 
+    }
+    
+    @Test
     public void testDeleteTimeSlot() {        
         timeSlotCollection.insertOne(
             new org.bson.Document()

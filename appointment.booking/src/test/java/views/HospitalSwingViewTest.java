@@ -64,5 +64,6 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         
         window.list("timeSlotList");
         window.list("appointmentList");
+        window.textBox("patientNameTextBox");
     }
 }

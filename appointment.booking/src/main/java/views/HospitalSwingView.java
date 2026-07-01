@@ -46,6 +46,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
     }
 
     private void initComponents() {
+    		// time slot
     		JPanel mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -71,6 +72,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         
         add(mainPanel);
         
+        // appointment
         DefaultListModel<String> appointmentListModel = new DefaultListModel<>();
         appointmentList = new JList<>(appointmentListModel);
         appointmentList.setName("appointmentList");
@@ -88,6 +90,21 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         gbc.gridy = 1;
         gbc.weighty = 1.0;
         mainPanel.add(appointmentScrollPane, gbc);
+        
+        // patient name
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(new JLabel("Patient Name:"), gbc);
+
+        patientNameTextField = new JTextField(20);
+        patientNameTextField.setName("patientNameTextBox");
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        mainPanel.add(patientNameTextField, gbc);
     }
 
     public void setHospitalController(HospitalController controller) {

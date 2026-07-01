@@ -44,6 +44,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         setSize(600, 500);
         setLocationRelativeTo(null);
         initComponents();
+        setupActionListeners();
     }
 
     private void initComponents() {
@@ -144,6 +145,14 @@ public class HospitalSwingView extends JFrame implements HospitalView {
     public void setHospitalController(HospitalController controller) {
         this.controller = controller;
     }
+    
+    private void setupActionListeners() {
+        refreshButton.addActionListener(e -> {
+            if (controller != null) {
+                controller.getAllTimeSlots();
+            }
+        });
+    }
 
     @Override
     public void showAllTimeSlots(List<TimeSlot> timeSlots) {
@@ -198,7 +207,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
             errorLabel.setText(" ");
         });
     }
-
+   
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new HospitalSwingView().setVisible(true);

@@ -117,4 +117,17 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
 
         window.label("errorLabel").requireText(errorMessage);
     }
+    
+    @Test
+    public void testAppointmentCreated() {
+        TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        Appointment appointment = new Appointment("APT001", "John Doe", slot);
+
+        view.appointmentCreated(appointment);
+
+        String[] listContents = window.list("appointmentList").contents();
+        assertThat(listContents).contains(appointment.toString());
+        
+        window.label("errorLabel").requireText(" ");
+    }
 }

@@ -70,6 +70,24 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         mainPanel.add(timeSlotScrollPane, gbc);
         
         add(mainPanel);
+        
+        DefaultListModel<String> appointmentListModel = new DefaultListModel<>();
+        appointmentList = new JList<>(appointmentListModel);
+        appointmentList.setName("appointmentList");
+        JScrollPane appointmentScrollPane = new JScrollPane(appointmentList);
+        appointmentScrollPane.setName("appointmentScrollPane");
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 0.5;
+        mainPanel.add(new JLabel("Appointments"), gbc);
+
+        gbc.gridy = 1;
+        gbc.weighty = 1.0;
+        mainPanel.add(appointmentScrollPane, gbc);
     }
 
     public void setHospitalController(HospitalController controller) {

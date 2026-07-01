@@ -181,6 +181,18 @@ public class HospitalSwingView extends JFrame implements HospitalView {
                 patientNameTextField.setText("");
             }
         });
+        
+        deleteButton.addActionListener(e -> {
+            if (controller != null) {
+                String selectedAppointment = appointmentList.getSelectedValue();
+                
+                String id = selectedAppointment.substring(
+                    selectedAppointment.indexOf("'") + 1,
+                    selectedAppointment.indexOf("'", selectedAppointment.indexOf("'") + 1)
+                );
+                controller.deleteAppointment(id);
+            }
+        });
     }
 
     @Override

@@ -238,6 +238,8 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         Appointment appointment = new Appointment("APT001", "John Doe", slot);
         
+        when(appointmentRepository.findById("APT001")).thenReturn(appointment);
+        
         view.showAllAppointments(Arrays.asList(appointment));
         
         window.list("appointmentList").selectItem(0);

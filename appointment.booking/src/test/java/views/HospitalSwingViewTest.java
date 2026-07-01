@@ -95,4 +95,17 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         assertThat(listContents).containsExactly(slot1.toString());
         assertThat(listContents).doesNotContain(slot2.toString());
     }
+    
+    @Test
+    public void testShowAllAppointments() {
+        TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        Appointment apt1 = new Appointment("APT001", "John Doe", slot);
+        Appointment apt2 = new Appointment("APT002", "Jane Smith", slot);
+        List<Appointment> appointments = Arrays.asList(apt1, apt2);
+
+        view.showAllAppointments(appointments);
+
+        String[] listContents = window.list("appointmentList").contents();
+        assertThat(listContents).containsExactly(apt1.toString(), apt2.toString());
+    }
 }

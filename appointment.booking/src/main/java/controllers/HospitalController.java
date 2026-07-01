@@ -4,6 +4,7 @@ import models.Appointment;
 import models.TimeSlot;
 import repositories.AppointmentRepository;
 import repositories.TimeSlotRepository;
+import views.HospitalView;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,54 +13,65 @@ public class HospitalController {
 
     private final TimeSlotRepository timeSlotRepository;
     private final AppointmentRepository appointmentRepository;
+    private final HospitalView view;
 
     public HospitalController(TimeSlotRepository timeSlotRepository, 
-                              AppointmentRepository appointmentRepository) {
+                              AppointmentRepository appointmentRepository,
+                              HospitalView view) {	
         this.timeSlotRepository = timeSlotRepository;
         this.appointmentRepository = appointmentRepository;
+        this.view = view;
     }
-    
-    public List<TimeSlot> getAllTimeSlots() {
-        return timeSlotRepository.findAll();
+   
+    public void getAllTimeSlots() {
+        List<TimeSlot> timeSlots = timeSlotRepository.findAll();
+        view.showAllTimeSlots(timeSlots);
     }
     
     public TimeSlot getTimeSlotById(String id) {
         return timeSlotRepository.findById(id);
     }
     
-    public List<TimeSlot> getAvailableTimeSlots() {
+    public void getAvailableTimeSlots() {
         List<TimeSlot> allSlots = timeSlotRepository.findAll();
-        return allSlots.stream()
+        List<TimeSlot> availableSlots = allSlots.stream()
                 .filter(slot -> slot.getAppointment() == null)
                 .collect(java.util.stream.Collectors.toList());
+        view.showAvailableTimeSlots(availableSlots);
     }
     
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
+    public void getAllAppointments() {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        view.showAllAppointments(appointments);
     }
     
-    public Appointment createAppointment(Appointment appointment) {
+    public void createAppointment(Appointment appointment) {
         TimeSlot timeSlot = timeSlotRepository.findById(appointment.getTimeSlot().getId());
         
         if (timeSlot == null) {
-            throw new IllegalArgumentException("Time slot not found: " + appointment.getTimeSlot().getId());
+            view.showError("Time slot not found: " + appointment.getTimeSlot().getId());
+            return;
         }
         
         if (timeSlot.getAppointment() != null) {
-            throw new IllegalStateException("Time slot is already booked");
+            view.showError("Time slot is already booked");
+            return;
         }
         
         appointmentRepository.save(appointment);
-        return appointment;
+        view.appointmentCreated(appointment);
     }
     
     public void deleteAppointment(String appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId);
         
         if (appointment == null) {
-            throw new IllegalArgumentException("Appointment not found: " + appointmentId);
+            view.showError("Appointment not found: " + appointmentId);
+            return;
         }
         
         appointmentRepository.delete(appointmentId);
+        view.appointmentDeleted(appointmentId);
     }
+
 }

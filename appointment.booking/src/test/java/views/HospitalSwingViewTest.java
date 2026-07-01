@@ -1,6 +1,7 @@
 package views;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -196,5 +197,39 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         String[] listContents = window.list("appointmentList").contents();
         assertThat(listContents).hasSize(1);
         assertThat(listContents[0]).contains("John Doe");
+    }
+    
+    @Test
+    public void testBookButtonShowsErrorWhenNoSlotSelected() {
+        window.textBox("patientNameTextBox").enterText("John Doe");
+
+        window.button("bookButton").click();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        window.label("errorLabel").requireText("Please select a time slot");
+        verify(appointmentRepository, never()).save(org.mockito.ArgumentMatchers.any(Appointment.class));
+    }
+
+    @Test
+    public void testBookButtonShowsErrorWhenNoPatientName() {
+        TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        view.showAllTimeSlots(Arrays.asList(slot));
+        window.list("timeSlotList").selectItem(0);
+
+        window.button("bookButton").click();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        window.label("errorLabel").requireText("Please enter a patient name");
+        verify(appointmentRepository, never()).save(org.mockito.ArgumentMatchers.any(Appointment.class));
     }
 }

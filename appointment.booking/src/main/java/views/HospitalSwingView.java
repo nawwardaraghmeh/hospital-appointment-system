@@ -172,6 +172,9 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void showError(String message) {
+        SwingUtilities.invokeLater(() -> {
+            errorLabel.setText(message);
+        });
     }
 
     @Override

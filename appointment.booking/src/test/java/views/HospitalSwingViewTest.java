@@ -1,6 +1,7 @@
 package views;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -18,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import controllers.HospitalController;
@@ -43,6 +45,8 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
 
     @Override
     protected void onSetUp() {
+    		MockitoAnnotations.openMocks(this);
+    	
         view = GuiActionRunner.execute(() -> new HospitalSwingView());
         
         controller = new HospitalController(timeSlotRepository, appointmentRepository, view);
@@ -147,4 +151,28 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         
         window.label("errorLabel").requireText(" ");
     }
+    
+    @Test
+    public void testRefreshButtonShowsAllTimeSlots() {
+        TimeSlot slot1 = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        TimeSlot slot2 = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
+        List<TimeSlot> expectedSlots = Arrays.asList(slot1, slot2);
+        
+        when(timeSlotRepository.findAll()).thenReturn(expectedSlots);
+
+        window.button("refreshButton").click();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        String[] listContents = window.list("timeSlotList").contents();
+        assertThat(listContents).containsExactly(slot1.toString(), slot2.toString());
+        
+        verify(timeSlotRepository, times(1)).findAll();
+    }
+
+
 }

@@ -157,6 +157,12 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void showAllAppointments(List<Appointment> appointments) {
+    		SwingUtilities.invokeLater(() -> {
+	        appointmentListModel.clear();
+	        for (Appointment apt : appointments) {
+	            appointmentListModel.addElement(apt.toString());
+	        }
+    		});
     }
 
     @Override

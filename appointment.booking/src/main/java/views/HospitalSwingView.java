@@ -31,6 +31,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
     private JList<String> timeSlotList;
     private DefaultListModel<String> timeSlotListModel;
     private JList<String> appointmentList;
+    private DefaultListModel<String> appointmentListModel;  
     private JTextField patientNameTextField;
     private JButton bookButton;
     private JButton refreshButton;
@@ -46,12 +47,12 @@ public class HospitalSwingView extends JFrame implements HospitalView {
     }
 
     private void initComponents() {
-    		// time slot
     		JPanel mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.BOTH;
         
+        // time slot
         timeSlotListModel = new DefaultListModel<>();
         timeSlotList = new JList<>(timeSlotListModel);
         timeSlotList.setName("timeSlotList"); 
@@ -70,10 +71,8 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         gbc.weighty = 1.0;
         mainPanel.add(timeSlotScrollPane, gbc);
         
-        add(mainPanel);
-        
         // appointment
-        DefaultListModel<String> appointmentListModel = new DefaultListModel<>();
+        appointmentListModel = new DefaultListModel<>();
         appointmentList = new JList<>(appointmentListModel);
         appointmentList.setName("appointmentList");
         JScrollPane appointmentScrollPane = new JScrollPane(appointmentList);
@@ -138,6 +137,8 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         gbc.weighty = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(errorLabel, gbc);
+        
+        add(mainPanel);
     }
 
     public void setHospitalController(HospitalController controller) {
@@ -146,6 +147,12 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void showAllTimeSlots(List<TimeSlot> timeSlots) {
+    		SwingUtilities.invokeLater(() -> {
+            timeSlotListModel.clear();
+            for (TimeSlot slot : timeSlots) {
+                timeSlotListModel.addElement(slot.toString());
+            }
+        });
     }
 
     @Override

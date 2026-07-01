@@ -257,4 +257,18 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         String[] listContents = window.list("appointmentList").contents();
         assertThat(listContents).isEmpty();
     }
+    
+    @Test
+    public void testDeleteButtonShowsErrorWhenNoAppointmentSelected() {
+        window.button("deleteButton").click();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        window.label("errorLabel").requireText("Please select an appointment to delete");
+        verify(appointmentRepository, never()).delete(org.mockito.ArgumentMatchers.anyString());
+    }
 }

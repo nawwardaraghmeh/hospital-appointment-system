@@ -61,6 +61,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     @Test
     public void testWindowInitialState() {
         assertThat(window.target().getTitle()).isEqualTo("Hospital Appointment System");
-
+        
+        window.list("timeSlotList");
     }
 }

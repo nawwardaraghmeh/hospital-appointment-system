@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -18,7 +17,6 @@ import javax.swing.SwingUtilities;
 import controllers.HospitalController;
 import models.Appointment;
 import models.TimeSlot;
-import views.HospitalView;
 
 import java.util.List;
 
@@ -150,6 +148,37 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         refreshButton.addActionListener(e -> {
             if (controller != null) {
                 controller.getAllTimeSlots();
+            }
+        });
+        
+        bookButton.addActionListener(e -> {
+            if (controller != null) {
+                String selectedSlot = timeSlotList.getSelectedValue();
+                String patientName = patientNameTextField.getText();
+                
+                if (selectedSlot == null) {
+                    showError("Please select a time slot");
+                    return;
+                }
+                
+                if (patientName.trim().isEmpty()) {
+                    showError("Please enter a patient name");
+                    return;
+                }
+                
+                String id = selectedSlot.substring(
+                    selectedSlot.indexOf("'") + 1,
+                    selectedSlot.indexOf("'", selectedSlot.indexOf("'") + 1)
+                );
+                
+                TimeSlot timeSlot = controller.getTimeSlotById(id);
+                Appointment appointment = new Appointment(
+                    "APT" + System.currentTimeMillis(), 
+                    patientName, 
+                    timeSlot
+                );
+                controller.createAppointment(appointment);
+                patientNameTextField.setText("");
             }
         });
     }

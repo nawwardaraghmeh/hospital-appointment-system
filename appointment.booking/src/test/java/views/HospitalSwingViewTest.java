@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -20,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import controllers.HospitalController;
 import models.Appointment;
@@ -177,8 +174,6 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     @Test
     public void testBookButtonCreatesAppointment() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
-        Appointment appointment = new Appointment("APT001", "John Doe", slot);
-        
         when(timeSlotRepository.findById("TS001")).thenReturn(slot);
         
         view.showAllTimeSlots(Arrays.asList(slot));

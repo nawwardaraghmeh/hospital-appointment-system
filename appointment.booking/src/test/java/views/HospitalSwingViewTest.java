@@ -108,4 +108,13 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         String[] listContents = window.list("appointmentList").contents();
         assertThat(listContents).containsExactly(apt1.toString(), apt2.toString());
     }
+    
+    @Test
+    public void testShowError() {
+        String errorMessage = "Test error message";
+
+        view.showError(errorMessage);
+
+        window.label("errorLabel").requireText(errorMessage);
+    }
 }

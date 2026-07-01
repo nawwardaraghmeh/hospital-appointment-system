@@ -232,4 +232,27 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         window.label("errorLabel").requireText("Please enter a patient name");
         verify(appointmentRepository, never()).save(org.mockito.ArgumentMatchers.any(Appointment.class));
     }
+    
+    @Test
+    public void testDeleteButtonDeletesAppointment() {
+        TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        Appointment appointment = new Appointment("APT001", "John Doe", slot);
+        
+        view.showAllAppointments(Arrays.asList(appointment));
+        
+        window.list("appointmentList").selectItem(0);
+
+        window.button("deleteButton").click();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        verify(appointmentRepository, times(1)).delete("APT001");
+        
+        String[] listContents = window.list("appointmentList").contents();
+        assertThat(listContents).isEmpty();
+    }
 }

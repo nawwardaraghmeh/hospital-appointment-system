@@ -151,6 +151,19 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    public void testRefreshButtonWhenControllerIsNull() {
+        view.setHospitalController(null);
+        
+        window.button("refreshButton").click();
+        
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    @Test
     public void testRefreshButtonShowsAllTimeSlots() {
         TimeSlot slot1 = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         TimeSlot slot2 = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
@@ -170,6 +183,19 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         assertThat(listContents).containsExactly(slot1.toString(), slot2.toString());
         
         verify(timeSlotRepository, times(1)).findAll();
+    }
+    
+    @Test
+    public void testBookButtonWhenControllerIsNull() {
+        view.setHospitalController(null);
+        
+        window.button("bookButton").click();
+        
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
     
     @Test
@@ -234,6 +260,19 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    public void testDeleteButtonWhenControllerIsNull() {
+        view.setHospitalController(null);
+        
+        window.button("deleteButton").click();
+        
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    @Test
     public void testDeleteButtonDeletesAppointment() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         Appointment appointment = new Appointment("APT001", "John Doe", slot);
@@ -271,4 +310,5 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         window.label("errorLabel").requireText("Please select an appointment to delete");
         verify(appointmentRepository, never()).delete(org.mockito.ArgumentMatchers.anyString());
     }
+    
 }

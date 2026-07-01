@@ -151,6 +151,28 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    public void testAppointmentDeletedMultipleAppointments() {
+        TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        Appointment apt1 = new Appointment("APT001", "John Doe", slot);
+        Appointment apt2 = new Appointment("APT002", "Jane Smith", slot);
+        Appointment apt3 = new Appointment("APT003", "Bob Johnson", slot);
+        
+        view.appointmentCreated(apt1);
+        view.appointmentCreated(apt2);
+        view.appointmentCreated(apt3);
+        
+        String[] before = window.list("appointmentList").contents();
+        assertThat(before).hasSize(3);
+        
+        view.appointmentDeleted("APT002");
+        
+        String[] after = window.list("appointmentList").contents();
+        assertThat(after).hasSize(2);
+        assertThat(after).doesNotContain(apt2.toString());
+        assertThat(after).contains(apt1.toString(), apt3.toString());
+    }
+    
+    @Test
     public void testRefreshButtonWhenControllerIsNull() {
         view.setHospitalController(null);
         

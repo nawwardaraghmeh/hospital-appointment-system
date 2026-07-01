@@ -186,6 +186,11 @@ public class HospitalSwingView extends JFrame implements HospitalView {
             if (controller != null) {
                 String selectedAppointment = appointmentList.getSelectedValue();
                 
+                if (selectedAppointment == null) {
+                    showError("Please select an appointment to delete");
+                    return;
+                }
+                
                 String id = selectedAppointment.substring(
                     selectedAppointment.indexOf("'") + 1,
                     selectedAppointment.indexOf("'", selectedAppointment.indexOf("'") + 1)

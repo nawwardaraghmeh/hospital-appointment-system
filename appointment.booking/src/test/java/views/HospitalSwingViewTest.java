@@ -130,4 +130,21 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         
         window.label("errorLabel").requireText(" ");
     }
+    
+    @Test
+    public void testAppointmentDeleted() {
+        TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        Appointment appointment = new Appointment("APT001", "John Doe", slot);
+        
+        view.appointmentCreated(appointment);
+        String[] beforeDelete = window.list("appointmentList").contents();
+        assertThat(beforeDelete).contains(appointment.toString());
+
+        view.appointmentDeleted("APT001");
+
+        String[] afterDelete = window.list("appointmentList").contents();
+        assertThat(afterDelete).doesNotContain(appointment.toString());
+        
+        window.label("errorLabel").requireText(" ");
+    }
 }

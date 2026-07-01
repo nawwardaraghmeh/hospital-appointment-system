@@ -187,6 +187,16 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void appointmentDeleted(String appointmentId) {
+        SwingUtilities.invokeLater(() -> {
+            for (int i = 0; i < appointmentListModel.size(); i++) {
+                String item = appointmentListModel.getElementAt(i);
+                if (item.contains(appointmentId)) {
+                    appointmentListModel.remove(i);
+                    break;
+                }
+            }
+            errorLabel.setText(" ");
+        });
     }
 
     public static void main(String[] args) {

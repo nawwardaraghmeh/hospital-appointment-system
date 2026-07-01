@@ -161,6 +161,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void showAvailableTimeSlots(List<TimeSlot> timeSlots) {
+    		showAllTimeSlots(timeSlots);
     }
 
     @Override

@@ -70,4 +70,16 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         window.button("deleteButton");    
         window.label("errorLabel");  
     }
+    
+    @Test
+    public void testShowAllTimeSlots() {
+        TimeSlot slot1 = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        TimeSlot slot2 = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
+        List<TimeSlot> timeSlots = Arrays.asList(slot1, slot2);
+
+        view.showAllTimeSlots(timeSlots);
+
+        String[] listContents = window.list("timeSlotList").contents();
+        assertThat(listContents).containsExactly(slot1.toString(), slot2.toString());
+    }
 }

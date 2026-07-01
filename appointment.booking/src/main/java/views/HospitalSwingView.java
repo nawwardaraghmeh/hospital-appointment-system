@@ -179,6 +179,10 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void appointmentCreated(Appointment appointment) {
+	    	SwingUtilities.invokeLater(() -> {
+	        appointmentListModel.addElement(appointment.toString());
+	        errorLabel.setText(" ");
+	    	});
     }
 
     @Override

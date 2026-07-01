@@ -68,5 +68,6 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         window.button("bookButton");       
         window.button("refreshButton");    
         window.button("deleteButton");    
+        window.label("errorLabel");  
     }
 }

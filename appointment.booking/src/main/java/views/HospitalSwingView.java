@@ -126,6 +126,18 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         gbc.weighty = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(buttonPanel, gbc);
+        
+        // error 
+        errorLabel = new JLabel(" ");
+        errorLabel.setName("errorLabel");
+        errorLabel.setForeground(java.awt.Color.RED);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(errorLabel, gbc);
     }
 
     public void setHospitalController(HospitalController controller) {

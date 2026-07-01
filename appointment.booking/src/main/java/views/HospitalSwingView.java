@@ -105,6 +105,27 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         gbc.gridx = 1;
         gbc.gridy = 2;
         mainPanel.add(patientNameTextField, gbc);
+        
+        // buttons 
+        JPanel buttonPanel = new JPanel();
+
+        bookButton = new JButton("Book Appointment");
+        bookButton.setName("bookButton");
+        refreshButton = new JButton("Refresh");
+        refreshButton.setName("refreshButton");
+        deleteButton = new JButton("Delete Appointment");
+        deleteButton.setName("deleteButton");
+
+        buttonPanel.add(bookButton);
+        buttonPanel.add(refreshButton);
+        buttonPanel.add(deleteButton);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(buttonPanel, gbc);
     }
 
     public void setHospitalController(HospitalController controller) {

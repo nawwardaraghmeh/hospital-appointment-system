@@ -173,6 +173,33 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         
         verify(timeSlotRepository, times(1)).findAll();
     }
+    
+    @Test
+    public void testBookButtonCreatesAppointment() {
+        TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
+        Appointment appointment = new Appointment("APT001", "John Doe", slot);
+        
+        when(timeSlotRepository.findById("TS001")).thenReturn(slot);
+        
+        view.showAllTimeSlots(Arrays.asList(slot));
+        
+        window.textBox("patientNameTextBox").enterText("John Doe");
+        
+        window.list("timeSlotList").selectItem(0);
 
+        window.button("bookButton").click();
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        verify(timeSlotRepository, times(1)).findById("TS001");
+        verify(appointmentRepository, times(1)).save(org.mockito.ArgumentMatchers.any(Appointment.class));
+        
+        String[] listContents = window.list("appointmentList").contents();
+        assertThat(listContents).hasSize(1);
+        assertThat(listContents[0]).contains("John Doe");
+    }
 }

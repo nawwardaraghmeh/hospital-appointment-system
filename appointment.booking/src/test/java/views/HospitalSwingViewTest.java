@@ -80,12 +80,21 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     public void testShowAllTimeSlots() {
         TimeSlot slot1 = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         TimeSlot slot2 = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
-        List<TimeSlot> timeSlots = Arrays.asList(slot1, slot2);
+        TimeSlot slot3 = new TimeSlot("TS003", "Dr. Wilson", "Cardiology", "Room 303", LocalDateTime.now().plusDays(3));
+        List<TimeSlot> timeSlots = Arrays.asList(slot1, slot2, slot3);
 
         view.showAllTimeSlots(timeSlots);
 
+        try { Thread.sleep(200); } catch (InterruptedException e) {}
+
         String[] listContents = window.list("timeSlotList").contents();
-        assertThat(listContents).containsExactly(slot1.toString(), slot2.toString());
+        
+        assertThat(listContents).contains("-- CARDIOLOGY --");
+        assertThat(listContents).contains("-- NEUROLOGY --");
+
+        assertThat(listContents).contains("  " + slot1.toString());
+        assertThat(listContents).contains("  " + slot2.toString());
+        assertThat(listContents).contains("  " + slot3.toString());
     }
     
     @Test
@@ -97,8 +106,12 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
 
         view.showAvailableTimeSlots(availableSlots);
 
+        try { Thread.sleep(200); } catch (InterruptedException e) {}
+
         String[] listContents = window.list("timeSlotList").contents();
-        assertThat(listContents).containsExactly(slot1.toString());
+        
+        assertThat(listContents).contains("-- CARDIOLOGY --");
+        assertThat(listContents).contains("  " + slot1.toString());
         assertThat(listContents).doesNotContain(slot2.toString());
     }
     
@@ -213,7 +226,12 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         }
 
         String[] listContents = window.list("timeSlotList").contents();
-        assertThat(listContents).containsExactly(slot1.toString(), slot2.toString());
+        
+        assertThat(listContents).contains("  " + slot1.toString());
+        assertThat(listContents).contains("  " + slot2.toString());
+        
+        assertThat(listContents).contains("-- CARDIOLOGY --");
+        assertThat(listContents).contains("-- NEUROLOGY --");
         
         verify(timeSlotRepository, times(1)).findAll();
     }
@@ -242,7 +260,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         
         window.textBox("patientNameTextBox").enterText("John Doe");
         
-        window.list("timeSlotList").selectItem(0);
+        window.list("timeSlotList").selectItem(1);
 
         window.button("bookButton").click();
 

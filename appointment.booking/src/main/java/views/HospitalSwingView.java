@@ -19,7 +19,10 @@ import controllers.HospitalController;
 import models.Appointment;
 import models.TimeSlot;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HospitalSwingView extends JFrame implements HospitalView {
 
@@ -304,12 +307,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void showAllTimeSlots(List<TimeSlot> timeSlots) {
-    		SwingUtilities.invokeLater(() -> {
-            timeSlotListModel.clear();
-            for (TimeSlot slot : timeSlots) {
-                timeSlotListModel.addElement(slot.toString());
-            }
-        });
+        showGroupedTimeSlots(timeSlots);  
     }
 
     @Override
@@ -324,7 +322,7 @@ public class HospitalSwingView extends JFrame implements HospitalView {
 
     @Override
     public void showAvailableTimeSlots(List<TimeSlot> timeSlots) {
-    		showAllTimeSlots(timeSlots);
+    	    showGroupedTimeSlots(timeSlots);
     }
 
     @Override
@@ -353,6 +351,33 @@ public class HospitalSwingView extends JFrame implements HospitalView {
                 }
             }
             errorLabel.setText(" ");
+        });
+    }
+    
+    private String formatDepartmentHeader(String department) {
+        return "-- " + department.toUpperCase() + " --";
+    }
+
+    private void showGroupedTimeSlots(List<TimeSlot> timeSlots) {
+        SwingUtilities.invokeLater(() -> {
+            timeSlotListModel.clear();
+            
+            Map<String, List<TimeSlot>> departmentMap = new HashMap<>();
+            for (TimeSlot slot : timeSlots) {
+                String dept = slot.getDepartment();
+                departmentMap.computeIfAbsent(dept, k -> new ArrayList<>()).add(slot);
+            }
+            
+            for (Map.Entry<String, List<TimeSlot>> entry : departmentMap.entrySet()) {
+                String department = entry.getKey();
+                List<TimeSlot> slots = entry.getValue();
+                
+                timeSlotListModel.addElement(formatDepartmentHeader(department));
+                
+                for (TimeSlot slot : slots) {
+                    timeSlotListModel.addElement("  " + slot.toString());
+                }
+            }
         });
     }
    

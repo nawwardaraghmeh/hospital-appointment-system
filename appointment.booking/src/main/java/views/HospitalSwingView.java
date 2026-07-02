@@ -35,6 +35,11 @@ public class HospitalSwingView extends JFrame implements HospitalView {
     private JButton refreshButton;
     private JButton deleteButton;
     private JLabel errorLabel;
+    private JTextField doctorNameTextField;
+    private JTextField departmentTextField;
+    private JTextField roomNumberTextField;
+    private JTextField dateTimeTextField;
+    private JButton addTimeSlotButton;
 
     public HospitalSwingView() {
         setTitle("Hospital Appointment System");
@@ -136,6 +141,68 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         gbc.weighty = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(errorLabel, gbc);
+        
+        // add time slot section
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(new JLabel("Add New Time Slot"), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Doctor:"), gbc);
+
+        doctorNameTextField = new JTextField(15);
+        doctorNameTextField.setName("doctorNameTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(doctorNameTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Department:"), gbc);
+
+        departmentTextField = new JTextField(15);
+        departmentTextField.setName("departmentTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(departmentTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Room:"), gbc);
+
+        roomNumberTextField = new JTextField(10);
+        roomNumberTextField.setName("roomNumberTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(roomNumberTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Date/Time (YYYY-MM-DD HH:MM):"), gbc);
+
+        dateTimeTextField = new JTextField(20);
+        dateTimeTextField.setName("dateTimeTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(dateTimeTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.gridwidth = 2;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.CENTER;
+        addTimeSlotButton = new JButton("Add Time Slot");
+        addTimeSlotButton.setName("addTimeSlotButton");
+        mainPanel.add(addTimeSlotButton, gbc);
         
         add(mainPanel);
     }

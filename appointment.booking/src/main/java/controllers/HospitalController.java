@@ -73,5 +73,9 @@ public class HospitalController {
         appointmentRepository.delete(appointmentId);
         view.appointmentDeleted(appointmentId);
     }
+    
+    public void addTimeSlot(TimeSlot timeSlot) {
+        timeSlotRepository.save(timeSlot);
+    }
 
 }

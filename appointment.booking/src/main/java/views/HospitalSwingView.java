@@ -3,6 +3,7 @@ package views;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.time.LocalDateTime;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -263,6 +264,33 @@ public class HospitalSwingView extends JFrame implements HospitalView {
                     selectedAppointment.indexOf("'", selectedAppointment.indexOf("'") + 1)
                 );
                 controller.deleteAppointment(id);
+            }
+        });
+        
+        addTimeSlotButton.addActionListener(e -> {
+            if (controller != null) {
+                try {
+                    String doctorName = doctorNameTextField.getText().trim();
+                    String department = departmentTextField.getText().trim();
+                    String roomNumber = roomNumberTextField.getText().trim();
+                    String dateTimeStr = dateTimeTextField.getText().trim();
+                    
+                    if (doctorName.isEmpty() || department.isEmpty() || 
+                        roomNumber.isEmpty() || dateTimeStr.isEmpty()) {
+                        showError("Please fill all fields");
+                        return;
+                    }
+                    
+                    LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, 
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                    
+                    String id = "TS" + System.currentTimeMillis();
+                    TimeSlot slot = new TimeSlot(id, doctorName, department, roomNumber, dateTime);
+                    controller.addTimeSlot(slot);
+                    
+                } catch (Exception ex) {
+                    showError("Error: " + ex.getMessage());
+                }
             }
         });
     }

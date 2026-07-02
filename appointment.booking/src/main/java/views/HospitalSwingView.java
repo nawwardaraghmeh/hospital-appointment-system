@@ -274,9 +274,8 @@ public class HospitalSwingView extends JFrame implements HospitalView {
                     String department = departmentTextField.getText().trim();
                     String roomNumber = roomNumberTextField.getText().trim();
                     String dateTimeStr = dateTimeTextField.getText().trim();
-                    
-                    if (doctorName.isEmpty() || department.isEmpty() || 
-                        roomNumber.isEmpty() || dateTimeStr.isEmpty()) {
+
+                    if (doctorName.isEmpty() || department.isEmpty() || roomNumber.isEmpty() || dateTimeStr.isEmpty()) {
                         showError("Please fill all fields");
                         return;
                     }
@@ -286,11 +285,19 @@ public class HospitalSwingView extends JFrame implements HospitalView {
                     
                     String id = "TS" + System.currentTimeMillis();
                     TimeSlot slot = new TimeSlot(id, doctorName, department, roomNumber, dateTime);
+                    
                     controller.addTimeSlot(slot);
                     
-                } catch (Exception ex) {
-                    showError("Error: " + ex.getMessage());
-                }
+                    doctorNameTextField.setText("");
+                    departmentTextField.setText("");
+                    roomNumberTextField.setText("");
+                    dateTimeTextField.setText("");
+                    showError("Time slot added successfully!");
+                    
+                } catch (java.time.format.DateTimeParseException ex) {
+                    showError("Invalid date format. Use: YYYY-MM-DD HH:MM");
+                } 
+            } else {
             }
         });
     }

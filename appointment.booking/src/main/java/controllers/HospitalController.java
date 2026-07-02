@@ -6,7 +6,6 @@ import repositories.AppointmentRepository;
 import repositories.TimeSlotRepository;
 import views.HospitalView;
 
-import java.util.Collections;
 import java.util.List;
 
 public class HospitalController {

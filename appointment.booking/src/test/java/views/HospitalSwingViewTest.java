@@ -334,6 +334,17 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    public void testAddTimeSlotButtonWhenControllerIsNull() {
+        view.setHospitalController(null);
+        
+        window.button("addTimeSlotButton").click();
+        
+        try { Thread.sleep(200); } catch (InterruptedException e) {}
+
+        verify(timeSlotRepository, never()).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
+    }
+    
+    @Test
     public void testAddTimeSlotButtonCallsController() {
         String doctorName = "Dr. New";
         String department = "Neurology";
@@ -352,4 +363,87 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         verify(timeSlotRepository, times(1)).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
     }
     
+    @Test
+    public void testAddTimeSlotShowsErrorWhenDoctorMissing() {
+        window.textBox("departmentTextBox").enterText("Cardiology");
+        window.textBox("roomNumberTextBox").enterText("101");
+        window.textBox("dateTimeTextBox").enterText("2025-01-15 10:00");
+        
+        window.button("addTimeSlotButton").click();
+        
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
+        window.label("errorLabel").requireText("Please fill all fields");
+        verify(timeSlotRepository, never()).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
+    }
+    
+    @Test
+    public void testAddTimeSlotShowsErrorWhenDepartmentMissing() {
+        window.textBox("doctorNameTextBox").enterText("Dr. House");
+        window.textBox("roomNumberTextBox").enterText("101");
+        window.textBox("dateTimeTextBox").enterText("2025-01-15 10:00");
+        
+        window.button("addTimeSlotButton").click();
+        
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
+        window.label("errorLabel").requireText("Please fill all fields");
+        verify(timeSlotRepository, never()).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
+    }
+    
+    @Test
+    public void testAddTimeSlotShowsErrorWhenRoomNumMissing() {
+        window.textBox("doctorNameTextBox").enterText("Dr. House");
+        window.textBox("departmentTextBox").enterText("Cardiology");
+        window.textBox("dateTimeTextBox").enterText("2025-01-15 10:00");
+        
+        window.button("addTimeSlotButton").click();
+        
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
+        window.label("errorLabel").requireText("Please fill all fields");
+        verify(timeSlotRepository, never()).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
+    }
+    
+    @Test
+    public void testAddTimeSlotShowsErrorWhenInvalidDateTime() {
+        window.textBox("doctorNameTextBox").enterText("Dr. House");
+        window.textBox("departmentTextBox").enterText("Cardiology");
+        window.textBox("roomNumberTextBox").enterText("101");
+        window.textBox("dateTimeTextBox").enterText("invalid-date");
+        
+        window.button("addTimeSlotButton").click();
+        
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
+        String errorText = window.label("errorLabel").text();
+        assertThat(errorText).contains("Invalid date");
+        verify(timeSlotRepository, never()).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
+    }
+    
+    @Test
+    public void testAddTimeSlotButtonSuccess() {
+        String doctorName = "Dr. New";
+        String department = "Neurology";
+        String roomNumber = "404";
+        String dateTime = "2025-01-15 10:00";
+        
+        window.textBox("doctorNameTextBox").enterText(doctorName);
+        window.textBox("departmentTextBox").enterText(department);
+        window.textBox("roomNumberTextBox").enterText(roomNumber);
+        window.textBox("dateTimeTextBox").enterText(dateTime);
+        
+        window.button("addTimeSlotButton").click();
+        
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
+        verify(timeSlotRepository, times(1)).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
+        
+        assertThat(window.textBox("doctorNameTextBox").text()).isEmpty();
+        assertThat(window.textBox("departmentTextBox").text()).isEmpty();
+        assertThat(window.textBox("roomNumberTextBox").text()).isEmpty();
+        assertThat(window.textBox("dateTimeTextBox").text()).isEmpty();
+        
+        window.label("errorLabel").requireText("Time slot added successfully!");
+    }
 }

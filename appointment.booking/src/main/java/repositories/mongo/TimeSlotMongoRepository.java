@@ -69,14 +69,6 @@ public class TimeSlotMongoRepository implements TimeSlotRepository {
     public void delete(String id) {
         timeSlotCollection.deleteOne(Filters.eq("id", id));
     }
-    
-    @Override
-    public List<TimeSlot> findByDepartment(String department) {
-        return StreamSupport.stream(
-                timeSlotCollection.find(Filters.eq("department", department)).spliterator(), false)
-                .map(this::fromDocumentToTimeSlot)
-                .collect(Collectors.toList());
-    }
 
     private TimeSlot fromDocumentToTimeSlot(Document doc) {
         return new TimeSlot(
@@ -87,5 +79,4 @@ public class TimeSlotMongoRepository implements TimeSlotRepository {
                 LocalDateTime.parse(doc.getString("appointmentDateTime"))
         );
     }
-    
 }

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -61,6 +62,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testWindowInitialState() {
         assertThat(window.target().getTitle()).isEqualTo("Hospital Appointment System");
         
@@ -74,6 +76,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testShowAllTimeSlots() {
         TimeSlot slot1 = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         TimeSlot slot2 = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
@@ -86,6 +89,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testShowAvailableTimeSlots() {
         TimeSlot slot1 = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         TimeSlot slot2 = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
@@ -99,6 +103,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testShowAllAppointments() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         Appointment apt1 = new Appointment("APT001", "John Doe", slot);
@@ -112,6 +117,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testShowError() {
         String errorMessage = "Test error message";
 
@@ -121,6 +127,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAppointmentCreated() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         Appointment appointment = new Appointment("APT001", "John Doe", slot);
@@ -134,6 +141,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAppointmentDeleted() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         Appointment appointment = new Appointment("APT001", "John Doe", slot);
@@ -151,6 +159,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAppointmentDeletedMultipleAppointments() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         Appointment apt1 = new Appointment("APT001", "John Doe", slot);
@@ -173,6 +182,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testRefreshButtonWhenControllerIsNull() {
         view.setHospitalController(null);
         
@@ -186,6 +196,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testRefreshButtonShowsAllTimeSlots() {
         TimeSlot slot1 = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         TimeSlot slot2 = new TimeSlot("TS002", "Dr. Smith", "Neurology", "Room 202", LocalDateTime.now().plusDays(2));
@@ -208,6 +219,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testBookButtonWhenControllerIsNull() {
         view.setHospitalController(null);
         
@@ -221,6 +233,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testBookButtonCreatesAppointment() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         when(timeSlotRepository.findById("TS001")).thenReturn(slot);
@@ -248,6 +261,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testBookButtonShowsErrorWhenNoSlotSelected() {
         window.textBox("patientNameTextBox").enterText("John Doe");
 
@@ -264,6 +278,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
 
     @Test
+    @GUITest
     public void testBookButtonShowsErrorWhenNoPatientName() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         view.showAllTimeSlots(Arrays.asList(slot));
@@ -282,6 +297,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testDeleteButtonWhenControllerIsNull() {
         view.setHospitalController(null);
         
@@ -295,6 +311,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testDeleteButtonDeletesAppointment() {
         TimeSlot slot = new TimeSlot("TS001", "Dr. House", "Cardiology", "Room 101", LocalDateTime.now().plusDays(1));
         Appointment appointment = new Appointment("APT001", "John Doe", slot);
@@ -320,6 +337,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testDeleteButtonShowsErrorWhenNoAppointmentSelected() {
         window.button("deleteButton").click();
 
@@ -334,6 +352,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAddTimeSlotButtonWhenControllerIsNull() {
         view.setHospitalController(null);
         
@@ -345,6 +364,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAddTimeSlotButtonCallsController() {
         String doctorName = "Dr. New";
         String department = "Neurology";
@@ -364,6 +384,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAddTimeSlotShowsErrorWhenDoctorMissing() {
         window.textBox("departmentTextBox").enterText("Cardiology");
         window.textBox("roomNumberTextBox").enterText("101");
@@ -378,6 +399,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAddTimeSlotShowsErrorWhenDepartmentMissing() {
         window.textBox("doctorNameTextBox").enterText("Dr. House");
         window.textBox("roomNumberTextBox").enterText("101");
@@ -392,6 +414,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAddTimeSlotShowsErrorWhenRoomNumMissing() {
         window.textBox("doctorNameTextBox").enterText("Dr. House");
         window.textBox("departmentTextBox").enterText("Cardiology");
@@ -406,6 +429,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAddTimeSlotShowsErrorWhenInvalidDateTime() {
         window.textBox("doctorNameTextBox").enterText("Dr. House");
         window.textBox("departmentTextBox").enterText("Cardiology");
@@ -422,6 +446,7 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
     }
     
     @Test
+    @GUITest
     public void testAddTimeSlotButtonSuccess() {
         String doctorName = "Dr. New";
         String department = "Neurology";

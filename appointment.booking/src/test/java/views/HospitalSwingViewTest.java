@@ -333,4 +333,23 @@ public class HospitalSwingViewTest extends AssertJSwingJUnitTestCase {
         verify(appointmentRepository, never()).delete(org.mockito.ArgumentMatchers.anyString());
     }
     
+    @Test
+    public void testAddTimeSlotButtonCallsController() {
+        String doctorName = "Dr. New";
+        String department = "Neurology";
+        String roomNumber = "404";
+        String dateTime = "2025-01-15 10:00";
+        
+        window.textBox("doctorNameTextBox").enterText(doctorName);
+        window.textBox("departmentTextBox").enterText(department);
+        window.textBox("roomNumberTextBox").enterText(roomNumber);
+        window.textBox("dateTimeTextBox").enterText(dateTime);
+        
+        window.button("addTimeSlotButton").click();
+        
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        
+        verify(timeSlotRepository, times(1)).save(org.mockito.ArgumentMatchers.any(TimeSlot.class));
+    }
+    
 }

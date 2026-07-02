@@ -3,6 +3,7 @@ package views;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.time.LocalDateTime;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -35,6 +36,11 @@ public class HospitalSwingView extends JFrame implements HospitalView {
     private JButton refreshButton;
     private JButton deleteButton;
     private JLabel errorLabel;
+    private JTextField doctorNameTextField;
+    private JTextField departmentTextField;
+    private JTextField roomNumberTextField;
+    private JTextField dateTimeTextField;
+    private JButton addTimeSlotButton;
 
     public HospitalSwingView() {
         setTitle("Hospital Appointment System");
@@ -137,6 +143,68 @@ public class HospitalSwingView extends JFrame implements HospitalView {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(errorLabel, gbc);
         
+        // add time slot section
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(new JLabel("Add New Time Slot"), gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Doctor:"), gbc);
+
+        doctorNameTextField = new JTextField(15);
+        doctorNameTextField.setName("doctorNameTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(doctorNameTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Department:"), gbc);
+
+        departmentTextField = new JTextField(15);
+        departmentTextField.setName("departmentTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(departmentTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 8;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Room:"), gbc);
+
+        roomNumberTextField = new JTextField(10);
+        roomNumberTextField.setName("roomNumberTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(roomNumberTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.weightx = 0.3;
+        mainPanel.add(new JLabel("Date/Time (YYYY-MM-DD HH:MM):"), gbc);
+
+        dateTimeTextField = new JTextField(20);
+        dateTimeTextField.setName("dateTimeTextBox");
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        mainPanel.add(dateTimeTextField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.gridwidth = 2;
+        gbc.weighty = 0.0;
+        gbc.fill = GridBagConstraints.CENTER;
+        addTimeSlotButton = new JButton("Add Time Slot");
+        addTimeSlotButton.setName("addTimeSlotButton");
+        mainPanel.add(addTimeSlotButton, gbc);
+        
         add(mainPanel);
     }
 
@@ -196,6 +264,40 @@ public class HospitalSwingView extends JFrame implements HospitalView {
                     selectedAppointment.indexOf("'", selectedAppointment.indexOf("'") + 1)
                 );
                 controller.deleteAppointment(id);
+            }
+        });
+        
+        addTimeSlotButton.addActionListener(e -> {
+            if (controller != null) {
+                try {
+                    String doctorName = doctorNameTextField.getText().trim();
+                    String department = departmentTextField.getText().trim();
+                    String roomNumber = roomNumberTextField.getText().trim();
+                    String dateTimeStr = dateTimeTextField.getText().trim();
+
+                    if (doctorName.isEmpty() || department.isEmpty() || roomNumber.isEmpty() || dateTimeStr.isEmpty()) {
+                        showError("Please fill all fields");
+                        return;
+                    }
+                    
+                    LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, 
+                        java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                    
+                    String id = "TS" + System.currentTimeMillis();
+                    TimeSlot slot = new TimeSlot(id, doctorName, department, roomNumber, dateTime);
+                    
+                    controller.addTimeSlot(slot);
+                    
+                    doctorNameTextField.setText("");
+                    departmentTextField.setText("");
+                    roomNumberTextField.setText("");
+                    dateTimeTextField.setText("");
+                    showError("Time slot added successfully!");
+                    
+                } catch (java.time.format.DateTimeParseException ex) {
+                    showError("Invalid date format. Use: YYYY-MM-DD HH:MM");
+                } 
+            } else {
             }
         });
     }
